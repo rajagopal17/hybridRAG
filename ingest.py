@@ -9,13 +9,14 @@ import logging
 from pathlib import Path
 from typing import List, Dict, Any
 import re
+import json
 from datetime import datetime
 
 # Environment and configuration
 from dotenv import load_dotenv
 
 # Document processing
-from docling.document_converter import DocumentConverter
+from PyPDF2 import PdfReader
 from docx import Document as DocxDocument
 import openpyxl
 
@@ -25,8 +26,8 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 
 # LangChain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 # Ollama
 import ollama
@@ -34,18 +35,18 @@ import ollama
 # Database
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from psycopg2.extras import execute_values
+from psycopg2.extras import execute_values, Json
 
 # Utils
 from tqdm import tqdm
 import numpy as np
 
-# Configure logging
+# Configure logging with UTF-8 encoding for Windows compatibility
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(f'ingest_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'),
+        logging.FileHandler(f'ingest_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log', encoding='utf-8'),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -88,7 +89,6 @@ class DataIngestor:
         self._download_nltk_data()
 
         # Initialize components
-        self.docling_converter = DocumentConverter()
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
@@ -139,12 +139,12 @@ class DataIngestor:
             cur.execute(create_table_query)
 
             # Create index on vector column for faster similarity search
+            # Using HNSW index which works on empty tables (unlike IVFFlat)
             logger.info("Creating vector index...")
             cur.execute(f"""
                 CREATE INDEX IF NOT EXISTS {self.table_name}_embedding_idx
                 ON {self.table_name}
-                USING ivfflat (embedding vector_cosine_ops)
-                WITH (lists = 100);
+                USING hnsw (embedding vector_cosine_ops);
             """)
 
             cur.close()
@@ -156,11 +156,16 @@ class DataIngestor:
             raise
 
     def read_pdf(self, file_path: str) -> str:
-        """Read PDF file using Docling library"""
+        """Read PDF file using PyPDF2 library"""
         logger.info(f"Reading PDF: {file_path}")
         try:
-            result = self.docling_converter.convert(file_path)
-            text = result.document.export_to_markdown()
+            reader = PdfReader(file_path)
+            text_parts = []
+            for page in reader.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text_parts.append(page_text)
+            text = '\n'.join(text_parts)
             logger.info(f"Successfully extracted text from PDF ({len(text)} characters)")
             return text
         except Exception as e:
@@ -298,7 +303,7 @@ class DataIngestor:
                     # Prepare data tuple
                     data_to_insert.append((
                         chunk.page_content,
-                        chunk.metadata,
+                        Json(chunk.metadata),
                         embedding
                     ))
 

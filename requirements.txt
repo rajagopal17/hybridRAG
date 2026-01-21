@@ -14,6 +14,7 @@ nltk==3.8.1
 langchain==0.3.13
 langchain-community==0.3.13
 langchain-core>=0.3.26
+langchain-text-splitters>=0.3.0
 
 # Ollama integration
 ollama==0.4.5

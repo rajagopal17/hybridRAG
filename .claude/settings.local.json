@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd Hybrid RAG system with BM25 and Vector Search\n\n- Add data ingestion pipeline \\(ingest.py\\) with support for PDF/TXT/DOCX/XLSX\n- Add hybrid query system \\(query.py\\) combining BM25 and vector search using RRF\n- Implement Docling for PDF extraction and NLTK for text cleaning\n- Add LangChain for text chunking with configurable sizes\n- Integrate Ollama embeddings with nomic-embed-text model\n- Add PostgreSQL with pgvector for vector storage\n- Include comprehensive logging and error handling\n- Add requirements.txt with all dependencies\n- Add comprehensive README.md with setup and usage instructions\n- Update .gitignore for Python project\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(python -m venv:*)",
+      "Bash(venvScriptsactivate)",
+      "Bash(pip install:*)",
+      "Bash(./venv/Scripts/activate)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix dependency version conflicts in requirements.txt\n\n- Update python-docx to >=1.1.2 \\(was ==1.1.0\\) for docling compatibility\n- Update langchain-core to >=0.3.26 \\(was ==0.3.23\\) for langchain 0.3.13 compatibility\n- All dependencies now install successfully without conflicts\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(python:*)",
+      "Bash(./venv/Scripts/python.exe -m pip:*)",
+      "Bash(./venv/Scripts/python.exe:*)",
+      "Bash(curl:*)",
+      "Bash(cmd.exe /c start /wait vc_redist.x64.exe /install /quiet /norestart)",
+      "Bash(wmic product:*)",
+      "Bash(cmd.exe /c vc_redist.x64.exe)",
+      "Bash(dir:*)",
+      "Bash(set PYTHONIOENCODING=utf-8:*)"
+    ]
+  }
+}
