@@ -162,11 +162,11 @@ Edit the `.env` file with your settings:
 
 ```env
 # PostgreSQL Configuration
-POSTGRES_DB=product_costing
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_password
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
+POSTGRES_DB=*********
+POSTGRES_USER=****
+POSTGRES_PASSWORD=******
+POSTGRES_HOST=****
+POSTGRES_PORT=****
 
 # Table Names
 VECTOR_TABLE_NAME=sap_controlling
@@ -390,4 +390,4 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 ---
 
-**Built with ❤️ for efficient and accurate document retrieval**
+
