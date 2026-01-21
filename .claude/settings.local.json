@@ -19,7 +19,8 @@
       "Bash(wmic product:*)",
       "Bash(cmd.exe /c vc_redist.x64.exe)",
       "Bash(dir:*)",
-      "Bash(set PYTHONIOENCODING=utf-8:*)"
+      "Bash(set PYTHONIOENCODING=utf-8:*)",
+      "Bash(findstr:*)"
     ]
   }
 }
